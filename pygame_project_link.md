@@ -14,4 +14,4 @@
 
 [Скачать проект](https://disk.yandex.ru/d/4FUsowfW2LnMIQ)
 
-![alt-текст](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Текст заголовка логотипа 1")
+![alt-текст](https://github.com/natkor18/Yandex_Liceum_task/blob/main/start_screen.png)
