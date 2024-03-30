@@ -2,7 +2,7 @@ import sqlite3
 import sys
 
 from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
 from PyQt5.QtWidgets import QMainWindow, QTabWidget, QPushButton, QTableWidgetItem
 
 class MyWidget(QMainWindow):
@@ -41,28 +41,30 @@ class Window(QWidget):
         uic.loadUi("addEditCoffeeForm.ui", self)
         self.con = sqlite3.connect("coffee.sqlite")
         self.pushButton.clicked.connect(self.update_table)
+        self.msg = QMessageBox()
 
 
     def update_table(self):
-        cur2 = self.con.cursor()
+        msgBox = QMessageBox()
+        try:
+            cur2 = self.con.cursor()
 
-        idx = int(self.id.text())
-        title_sort = self.title_sort.text()
-        degree_roasting = self.degree_roasting.text()
-        ground_grains = int(self.ground_grains.text())
-        taste = self.taste.text()
-        price = float(self.price.text())
-        packing_volume = float(self.packing_volume.text())
-
-        lst = (idx, title_sort, degree_roasting, ground_grains, taste, price, packing_volume)
-        que = f"""INSERT INTO coffee
-        SET (title_sort, degree_roasting, ground_grains, taste, price, packing_volume) 
-        VALUES (?, ?, ?, ?, ?, ?, ?);"""
-        cur2.execute(que, lst)
-
-        # print(result2)
-
-        self.con.commit()
+            idx = int(self.id.text())
+            title_sort = self.title_sort.text()
+            degree_roasting = self.degree_roasting.text()
+            ground_grains = int(self.ground_grains.text())
+            taste = self.taste.text()
+            price = float(self.price.text())
+            packing_volume = float(self.packing_volume.text())
+            lst = (idx, title_sort, degree_roasting, ground_grains, taste, price, packing_volume)
+            que = f'INSERT INTO coffee (id, title_sort, degree_roasting, ground_grains, taste, price, packing_volume) VALUES {lst}'
+            result2 = cur2.execute(que)
+            self.con.commit()
+            msgBox.setText("Запись успешна добавлена")
+            msgBox.exec()
+        except ValueError:
+            msgBox.setText("Ошибка добавления")
+            msgBox.exec()
 
 
 
