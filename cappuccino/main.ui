@@ -82,7 +82,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Изменить/Добавить</string>
+     <string>Добавить</string>
     </property>
    </widget>
   </widget>
