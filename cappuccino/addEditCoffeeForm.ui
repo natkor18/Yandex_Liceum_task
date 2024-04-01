@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Добавить </string>
+   <string>Добавить/изменить </string>
   </property>
   <widget class="QLineEdit" name="title_sort">
    <property name="geometry">

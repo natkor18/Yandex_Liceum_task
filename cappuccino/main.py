@@ -46,27 +46,47 @@ class Window(QWidget):
 
     def update_table(self):
         msgBox = QMessageBox()
-        try:
-            cur2 = self.con.cursor()
+        cur = self.con.cursor()
+        idx = int(self.id.text())
+        title_sort = self.title_sort.text()
+        degree_roasting = self.degree_roasting.text()
+        ground_grains = int(self.ground_grains.text())
+        taste = self.taste.text()
+        price = float(self.price.text())
+        packing_volume = float(self.packing_volume.text())
 
-            idx = int(self.id.text())
-            title_sort = self.title_sort.text()
-            degree_roasting = self.degree_roasting.text()
-            ground_grains = int(self.ground_grains.text())
-            taste = self.taste.text()
-            price = float(self.price.text())
-            packing_volume = float(self.packing_volume.text())
-            lst = (idx, title_sort, degree_roasting, ground_grains, taste, price, packing_volume)
-            que = f'INSERT INTO coffee (id, title_sort, degree_roasting, ground_grains, taste, price, packing_volume) VALUES {lst}'
-            result2 = cur2.execute(que)
-            self.con.commit()
-            msgBox.setText("Запись успешна добавлена")
-            msgBox.exec()
+        lst = (idx, title_sort, degree_roasting, ground_grains, taste, price, packing_volume)
+        res = cur.execute("SELECT * FROM coffee WHERE id=?", (idx,)).fetchall()
+        title = [discr[0] for discr in cur.description]
+        modif = {}
+        i = 0
+        for key in title:
+            modif[key] = lst[i]
+            i +=1
+        try:
+            if res:
+                que = f'UPDATE coffee SET\n'
+                que += ", ".join([f"{key}='{modif.get(key)}'"
+                                  for key in modif.keys()])
+                que += " WHERE id = ?"
+
+                cur.execute(que, (self.id.text(),))
+                self.con.commit()
+                msgBox.setText("Запись успешна добавлена")
+                msgBox.exec()
+                modif.clear()
+            else:
+                que = f'INSERT INTO coffee (id, title_sort, degree_roasting, ground_grains, ' \
+                      f'taste, price, packing_volume) VALUES {lst}'
+                result = cur.execute(que)
+                self.con.commit()
+                msgBox.setText("Запись успешна добавлена")
+                msgBox.exec()
+
+
         except ValueError:
             msgBox.setText("Ошибка добавления")
             msgBox.exec()
-
-
 
 
 if __name__ == '__main__':
